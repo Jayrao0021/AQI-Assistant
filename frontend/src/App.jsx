@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { Wind, House, ChartNoAxesCombined, MapPin, Bell, Settings, PanelLeftClose, PanelLeftOpen, Search, LocateFixed, Activity, Droplets, CalendarDays, Clock3, CheckCircle2, X, UserRound, ArrowUpRight, ShieldAlert, Lightbulb, BrainCircuit, TrendingDown, Info, HeartPulse } from 'lucide-react'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
 import './App.css'
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'
 // Guidance for the modeled Indian AQI series.
 const advice = {
   Good: 'Air quality is good. Normal outdoor activities are generally suitable.',
@@ -103,13 +103,13 @@ export default function App() {
     setAirData(null)
     try {
       const params = new URLSearchParams({latitude: String(location.latitude), longitude: String(location.longitude)})
-      const response = await fetch(`http://127.0.0.1:8000/api/air-quality?${params}`, {signal})
+      const response = await fetch(`${API_BASE_URL}/api/air-quality?${params}`, {signal})
       if (!response.ok) throw new Error(`Air-quality API returned ${response.status}`)
       const data = await response.json()
       setAirData(data)
       if (data.indian_aqi == null) setError(data.indian_aqi_status || 'Indian AQI is unavailable for this location.')
     } catch (err) {
-      if (err.name !== 'AbortError') setError('Could not load air quality. Check that the FastAPI backend is running on port 8000.')
+      if (err.name !== 'AbortError') setError('Could not load air quality. Check the API connection and try again.')
     } finally {
       if (!signal?.aborted) setLoading(false)
     }
@@ -124,7 +124,7 @@ export default function App() {
     setStationData(null)
     setStationLoading(true)
     const params = new URLSearchParams({latitude: String(selectedLocation.latitude), longitude: String(selectedLocation.longitude)})
-    fetch(`http://127.0.0.1:8000/api/station-air-quality?${params}`, {signal: controller.signal})
+    fetch(`${API_BASE_URL}/api/station-air-quality?${params}`, {signal: controller.signal})
       .then(response => { if (!response.ok) throw new Error('Station endpoint unavailable'); return response.json() })
       .then(data => { if (!controller.signal.aborted) setStationData(data) })
       .catch(() => { if (!controller.signal.aborted) setStationData({status: 'provider_unavailable'}) })
@@ -143,7 +143,7 @@ export default function App() {
           longitude: String(selectedLocation.longitude),
           days: period.replace('D', ''),
         })
-        const response = await fetch(`http://127.0.0.1:8000/api/history?${params}`, {signal: controller.signal})
+        const response = await fetch(`${API_BASE_URL}/api/history?${params}`, {signal: controller.signal})
         if (!response.ok) throw new Error(`History API returned ${response.status}`)
         const data = await response.json()
         if (!controller.signal.aborted) setHistory((data.history || []).map(item => ({
@@ -167,7 +167,7 @@ export default function App() {
       setForecastLoading(true)
       try {
         const params = new URLSearchParams({latitude: String(selectedLocation.latitude), longitude: String(selectedLocation.longitude)})
-        const response = await fetch(`http://127.0.0.1:8000/api/forecast?${params}`, {signal: controller.signal})
+        const response = await fetch(`${API_BASE_URL}/api/forecast?${params}`, {signal: controller.signal})
         const result = await response.json()
         if (!response.ok) throw new Error(result.detail || `Forecast API returned ${response.status}`)
         if (!controller.signal.aborted) setForecastData(result.predictions || [])
@@ -195,12 +195,12 @@ export default function App() {
     setSearching(true)
     setShowSuggestions(true)
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/locations?query=${encodeURIComponent(search.trim())}`)
+      const response = await fetch(`${API_BASE_URL}/api/locations?query=${encodeURIComponent(search.trim())}`)
       if (!response.ok) throw new Error('Search failed')
       const cities = await response.json()
       setSuggestions(cities)
       if (!cities.length) setPopup('No matching cities found. Try another spelling.')
-    } catch { setPopup('City search failed. Make sure the backend is running.') }
+    } catch { setPopup('City search failed. Please try again.') }
     finally { setSearching(false) }
   }
   const useMyLocation = () => {
