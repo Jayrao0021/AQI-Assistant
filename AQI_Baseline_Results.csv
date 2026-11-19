@@ -1,0 +1,4 @@
+Horizon,MAE,RMSE,R2
+Target_1Day,31.17,44.74,0.848
+Target_3Day,56.45,80.7,0.507
+Target_7Day,67.05,94.64,0.324

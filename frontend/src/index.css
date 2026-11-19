@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  font-family: 'Inter', sans-serif;
+  color: #2b1750;
+  background: #fbf8ff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, input { font: inherit; }
+button { transition: background-color .2s ease, box-shadow .2s ease; }
+button:focus-visible, input:focus-visible { outline: 2px solid #9655e4; outline-offset: 3px; }
+::selection { background: #d7b9ff; color: #2b1750; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #d5b8ef; border-radius: 10px; }
+::-webkit-scrollbar-track { background: transparent; }

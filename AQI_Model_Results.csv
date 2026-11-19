@@ -1,0 +1,10 @@
+Model,Horizon,MAE,RMSE,R2
+Linear Regression,Target_1Day,31.8,43.54,0.856
+Random Forest,Target_1Day,32.29,44.72,0.848
+Gradient Boosting,Target_1Day,32.5,44.85,0.847
+Linear Regression,Target_3Day,54.34,71.74,0.61
+Random Forest,Target_3Day,54.27,74.66,0.578
+Gradient Boosting,Target_3Day,54.19,73.6,0.59
+Linear Regression,Target_7Day,62.8,80.16,0.515
+Random Forest,Target_7Day,65.14,83.76,0.47
+Gradient Boosting,Target_7Day,62.38,80.75,0.508
