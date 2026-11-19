@@ -1,3 +1,4 @@
+import traceback
 from datetime import datetime, timedelta, date
 from pathlib import Path
 import math
@@ -427,8 +428,10 @@ async def forecast(
         if artifact.get("features") != expected or artifact.get("cities") != list(CITY_COORDINATES):
             raise ValueError("Incompatible multi-city model artifact")
     except Exception as exc:
-        print("MULTICITY MODEL ERROR:", repr(exc), flush=True)
-        raise HTTPException(status_code=503, detail=f"Model loading failed: {type(exc).__name__}") from exc
+    import traceback
+    print("MULTICITY MODEL ERROR:", repr(exc), flush=True)
+    traceback.print_exc()
+    raise HTTPException(status_code=503, detail=f"Model loading failed: {type(exc).__name__}") from exc
 
     # Fetch recent completed daily estimates for the selected trained city.
     result = await history(latitude=latitude, longitude=longitude, days=30)
